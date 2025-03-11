@@ -1,3 +1,8 @@
+/*Analyze the Time Complexity of Summing Elements in an Array
+● Write a JavaScript function to sum all elements of an array.
+● Analyze the time complexity of the algorithm.
+*/
+
 function calculateSum(arr) {
     // Initialize sum variable
     let sum = 0;
