@@ -82,7 +82,8 @@ class LinkedList{
     getMid(){
         let rabbit = this.head;
         let turtle = this.head;
-        while(rabbit && rabbit.next){
+        //while(rabbit && rabbit.next.next){ // Second middle node in even-length list
+        while(rabbit && rabbit.next){ // First middle node in even-length list
             rabbit = rabbit.next;
             rabbit = rabbit.next;
             turtle = turtle.next;
