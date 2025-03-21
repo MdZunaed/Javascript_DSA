@@ -1,17 +1,15 @@
 
 
-function isPalindrome(number) {
-    while (number > 0) {
-        let digit = number % 10; // Extract the last digit
-        //console.log(digit); // Outputs: 5 4 3 2 1 (Reversed order)
-        number = Math.floor(number / 10); // Remove the last digit
-        if (number === digit) {
-            return true;
-        } else {
-            return false;
-        }
-        //return false;
+function isPalindrome(x) {
+    let reverse;
+    if (x < 0) {
+        return false;
+    } else {
+        reverse = x.toString().split("").reverse().join("");
+        console.log(reverse);
+        return x == reverse;
     }
 }
 
 console.log(isPalindrome(12121));
+console.log(isPalindrome(12345));
