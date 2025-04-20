@@ -9,7 +9,14 @@ class TreeNode {
 
 // ✅ Your task: Complete this function
 function searchBST(root, target) {
-  // TODO: Implement this function
+  if (root == null) return null;
+
+  if (target > root.value) return searchBST(root.right, target);
+  if (target < root.value) return searchBST(root.left, target);
+
+  if (root.value == target) {
+    return root;
+  }
 }
 
 // Do not change below this line

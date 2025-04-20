@@ -9,7 +9,19 @@ class TreeNode {
 
 // ✅ Your task: Complete this function
 function isValidBST(root) {
-  // TODO: Implement this function
+  
+  function helper(node, min, max) {
+    if (!node) return true;
+
+    if ((min !== null && node.value <= min) || (max !== null && node.value >= max)) {
+      return false;
+    }
+
+    return helper(node.left, min, node.value) && helper(node.right, node.value, max);
+  }
+
+  return helper(root, null, null);
+
 }
 
 // Do not change below this line
