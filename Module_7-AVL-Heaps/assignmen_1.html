@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AVL & Red-Black Tree Visualizer</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      background-color: #f4f4f4;
+    }
+
+    canvas {
+      border: 1px solid #ccc;
+      background-color: white;
+    }
+
+    #controls {
+      margin-top: 20px;
+    }
+
+    button {
+      margin: 0 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>AVL & Red-Black Tree Visualizer</h1>
+  <div id="controls">
+    <button onclick="insertNode('avl')">Insert AVL</button>
+    <button onclick="insertNode('rbt')">Insert Red-Black</button>
+  </div>
+  <canvas id="treeCanvas" width="1200" height="600"></canvas>
+
+  <script>
+    class TreeNode {
+      constructor(val, color = 'black') {
+        this.val = val;
+        this.left = null;
+        this.right = null;
+        this.height = 1; // for AVL
+        this.color = color; // for Red-Black
+      }
+    }
+
+    let avlRoot = null;
+    let rbtRoot = null;
+
+    function height(node) {
+      return node ? node.height : 0;
+    }
+
+    function rotateRight(y) {
+      let x = y.left;
+      y.left = x.right;
+      x.right = y;
+      y.height = Math.max(height(y.left), height(y.right)) + 1;
+      x.height = Math.max(height(x.left), height(x.right)) + 1;
+      return x;
+    }
+
+    function rotateLeft(x) {
+      let y = x.right;
+      x.right = y.left;
+      y.left = x;
+      x.height = Math.max(height(x.left), height(x.right)) + 1;
+      y.height = Math.max(height(y.left), height(y.right)) + 1;
+      return y;
+    }
+
+    function getBalance(node) {
+      return node ? height(node.left) - height(node.right) : 0;
+    }
+
+    function insertAVL(node, key) {
+      if (!node) return new TreeNode(key);
+
+      if (key < node.val) node.left = insertAVL(node.left, key);
+      else if (key > node.val) node.right = insertAVL(node.right, key);
+      else return node;
+      node.height = 1 + Math.max(height(node.left), height(node.right));
+      const balance = getBalance(node);
+
+
+      if (balance > 1 && key < node.left.val) return rotateRight(node);
+
+
+      if (balance < -1 && key > node.right.val) return rotateLeft(node);
+
+
+      if (balance > 1 && key > node.left.val) {
+        node.left = rotateLeft(node.left);
+        return rotateRight(node);
+      }
+
+      if (balance < -1 && key < node.right.val) {
+        node.right = rotateRight(node.right);
+        return rotateLeft(node);
+      }
+
+      return node;
+    }
+
+    function insertRBT(root, key) {
+      // complete this function 
+      // root will be returned 
+    }
+
+    function drawTree(root, x, y, spacing, ctx, isRBT = false) {
+      if (!root) return;
+      ctx.beginPath();
+      ctx.arc(x, y, 20, 0, 2 * Math.PI);
+      ctx.fillStyle = isRBT ? root.color : '#4CAF50';
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = 'white';
+      ctx.font = '16px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(root.val, x, y + 5);
+
+      if (root.left) {
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x - spacing, y + 70);
+        ctx.stroke();
+        drawTree(root.left, x - spacing, y + 70, spacing / 1.5, ctx, isRBT);
+      }
+      if (root.right) {
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + spacing, y + 70);
+        ctx.stroke();
+        drawTree(root.right, x + spacing, y + 70, spacing / 1.5, ctx, isRBT);
+      }
+    }
+
+    function render() {
+      const canvas = document.getElementById('treeCanvas');
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (avlRoot) drawTree(avlRoot, 300, 50, 120, ctx);
+      if (rbtRoot) drawTree(rbtRoot, 900, 50, 120, ctx, true);
+    }
+
+    function insertNode(type) {
+      const val = parseInt(prompt(`Insert value into ${type.toUpperCase()} tree:`));
+      if (isNaN(val)) return alert("Invalid input");
+      if (type === 'avl') avlRoot = insertAVL(avlRoot, val);
+      else rbtRoot = insertRBT(rbtRoot, val);
+      render();
+    }
+  </script>
+</body>
+
+</html>
